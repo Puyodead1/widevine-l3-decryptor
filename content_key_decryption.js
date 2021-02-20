@@ -285,7 +285,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
 
   async function processNetflix(keys) {
     //console.error("Netflix support is not implemented");
-    const manifest = await window.getNetflixManifest();
+    const manifest = await window.getManifest();
     if (!manifest) {
       console.error("No manifest");
       return;
