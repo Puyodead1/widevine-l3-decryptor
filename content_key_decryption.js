@@ -307,7 +307,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
       ];
     const kid = videoStream.drmHeaderId;
     console.log(
-      `[Downloader] Highest resolution is ${videoStream.res_h}x${videoStream.res_w}`
+      `[Downloader] Highest resolution is${videoStream.res_w}x${videoStream.res_h}`
     );
 
     const metadata = await window.getMetadata();
@@ -324,12 +324,12 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
         x.episodes.find((x) => x.id === curr)
       );
       var episode = season.episodes.find((x) => x.id === curr);
-      outFileName = `${metadata.video.title}.S${season.seq}.E${episode.seq}.${episode.title}.WEB.${videoStream.res_w}.mp4`;
+      outFileName = `${metadata.video.title}.S${season.seq}.E${episode.seq}.${episode.title}.WEB.${videoStream.res_h}.mp4`;
     } else if (metadata.video.type === "movie") {
-      outFileName = `${metadata.video.title}.WEB.${videoStream.res_w}.mp4`;
+      outFileName = `${metadata.video.title}.WEB.${videoStream.res_h}.mp4`;
     } else {
       console.warn("unknown video type");
-      outFileName = `unknown-${makeid()}.WEB.${videoStream.res_w}.mp4`;
+      outFileName = `unknown-${makeid()}.WEB.${videoStream.res_h}.mp4`;
     }
 
     await sendData({
