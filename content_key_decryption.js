@@ -275,7 +275,11 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
     } else if (window.location.href.includes("amazon")) {
       //
       console.log("Detected Amazon Prime");
-      await processAmazon(keys);
+      if (!window.requestSent) {
+        await processAmazon(keys);
+      } else {
+        console.warn("Request was already sent!");
+      }
     } else {
       console.error("Platform not supported");
     }
@@ -351,6 +355,8 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
 
   async function processHulu(keys) {
     const payload = window.payload;
+    if (!payload)
+      throw new Error("No payload was found. Is the Hulu extension loaded?");
 
     // var outFileName;
     // if (metadataPre.href_type === "series") {
@@ -408,7 +414,19 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
   }
 
   async function processAmazon(keys) {
-    console.error("Amazon support is not implemented");
+    const asin = window.location.href.split("/")[6].split("?")[0];
+
+    await sendData({
+      platform: "amazon",
+      asin,
+      keys,
+    })
+      .then(() => console.log(`[Downloader] Download request sent`))
+      .catch((e) =>
+        console.error(`[Downloader] Failed to send data to downloader!`, e)
+      );
+
+    window.requestSent = true;
   }
 
   function sendData(payload) {
