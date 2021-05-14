@@ -321,19 +321,19 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
       return;
     }
 
-    var outFileName;
+    var outputFileName;
     if (metadata.video.type === "show") {
       var curr = metadata.video.currentEpisode;
       var season = metadata.video.seasons.find((x) =>
         x.episodes.find((x) => x.id === curr)
       );
       var episode = season.episodes.find((x) => x.id === curr);
-      outFileName = `${metadata.video.title}.S${season.seq}.E${episode.seq}.${episode.title}.WEB.${videoStream.res_h}.mp4`;
+      outputFileName = `${metadata.video.title}.S${season.seq}.E${episode.seq}.${episode.title}.WEB.${videoStream.res_h}.mp4`;
     } else if (metadata.video.type === "movie") {
-      outFileName = `${metadata.video.title}.WEB.${videoStream.res_h}.mp4`;
+      outputFileName = `${metadata.video.title}.WEB.${videoStream.res_h}.mp4`;
     } else {
       console.warn("unknown video type");
-      outFileName = `unknown-${makeid()}.WEB.${videoStream.res_h}.mp4`;
+      outputFileName = `unknown-${makeid()}.WEB.${videoStream.res_h}.mp4`;
     }
 
     await sendData({
@@ -342,10 +342,10 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
       manifest: {
         audioStream,
         videoStream,
-        kid,
-        keys,
-        outFileName,
       },
+	  keys,
+	  outputFileName,
+	  kid
     })
       .then(() => console.log(`[Downloader] Download request sent`))
       .catch((e) =>
@@ -431,7 +431,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
 
   function sendData(payload) {
     return new Promise((resolve, reject) => {
-      fetch("http://127.0.0.1:8088/rip", {
+      fetch("http://127.0.0.1:5000/rip", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
