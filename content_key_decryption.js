@@ -304,11 +304,32 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
     const audioStreams = manifest.audio_tracks
       .find((x) => x.language === "en" && x.rawTrackType === "primary")
       .streams.filter((x) => x.trackType === "PRIMARY");
+    if (!audioStreams) {
+      return console.error("No english audio!");
+    }
     const audioStream = audioStreams[audioStreams.length - 1];
     const videoStream =
       manifest.video_tracks[0].streams[
         manifest.video_tracks[0].streams.length - 1
       ];
+    const subtitleStream = manifest.timedtexttracks.find(
+      (x) =>
+        x.language === "en" &&
+        (manifest.timedtexttracks.find(
+          (y) => y.isForcedNarrative && y.language === "en"
+        )
+          ? x.isForcedNarrative
+          : !x.isForcedNarrative)
+    );
+    const subtitleUrl =
+      subtitleStream.ttDownloadables["dfxp-ls-sdh"].downloadUrls[
+        Object.keys(
+          subtitleStream.ttDownloadables["dfxp-ls-sdh"].downloadUrls
+        )[0]
+      ];
+    if (!subtitleUrl) {
+      console.warn("No subtitle url");
+    }
     const kid = videoStream.drmHeaderId;
     console.log(
       `[Downloader] Highest resolution is${videoStream.res_w}x${videoStream.res_h}`
@@ -342,10 +363,11 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
       manifest: {
         audioStream,
         videoStream,
+        subtitleUrl,
       },
-	  keys,
-	  outputFileName,
-	  kid
+      keys,
+      outputFileName,
+      kid,
     })
       .then(() => console.log(`[Downloader] Download request sent`))
       .catch((e) =>
@@ -431,7 +453,7 @@ pPULAN9ZRrxG8V+bvkZWVREPTZj7xPCwPaZHNKoAmi3Dbv7S5SEYDbBX/NyPCLE4sj/AgTPbUsUtaiw5
 
   function sendData(payload) {
     return new Promise((resolve, reject) => {
-      fetch("http://127.0.0.1:5000/rip", {
+      fetch("http://127.0.0.1:8088/rip", {
         method: "POST",
         body: JSON.stringify(payload),
         headers: {
